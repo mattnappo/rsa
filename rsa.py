@@ -1,21 +1,83 @@
+# -*- coding: utf-8 -*-
+import fractions, random, os
 class Key():
-    def __init__(self):
-        self.p = 5 # one prime
-        self.q = 7 # another prime
-        self.n = self.p*self.q # the modulo
+    def __init__(self, name):
+        self.name = name
+        self.public = []
+        self.private = []
+    def start(self):
+        files = [self.name + "/" + self.name + "_n.rsa", self.name + "/" + self.name + "_public.rsa", self.name + "/" + self.name + "_private.rsa"]
+        with open(files[0], "r") as nVal:
+            with open(files[1], "r") as e:
+                nv = int(nVal.read())
+                self.public = [int(e.read()), nv]
+            with open(files[2], "r") as d:
+                self.private = [int(d.read()), nv]
+    def generate(self):
+        self.public = []
+        self.private = []
+        self.p = 61 # one prime
+        self.q = 53 # another prime
+        self.n = (self.p)*(self.q) # the modulo
         self.totient = (self.p-1)*(self.q-1) # totient
-        self.e = 3
-        if self.gcd(self.e, self.totient) == 1:
-            self.e = 3
-    def gcd(self, one, two):
-        while two:
-            one = two
-            two = one%two
-            return one
-    def phi(self, n):
-        amount = 0
-        for k in range(1, n + 1):
-            if self.gcd(n, k) == 1:
-                amount += 1
-        return amount
-myKey = Key()
+        self.e = 2
+        while True:
+            if fractions.gcd(self.e, self.totient)==1: # if coprime
+                break
+            else:
+                self.e = random.randint(2, self.totient) # continue to pick a random number in the range 1 < e < totient
+        self.d = 2
+        while True:
+            if (self.d)*(self.e)%self.totient==1: # if modulo of de == 1
+                break
+            else:
+                self.d = random.randint(2, self.n)
+        self.public = [self.e, self.n]
+        self.private = [self.d, self.n]
+        files = [self.name + "/" + self.name + "_n.rsa", self.name + "/" + self.name + "_public.rsa", self.name + "/" + self.name + "_private.rsa"]
+        values = [self.n, self.e, self.d]
+        for x in range(len(files)):
+            with open(files[x], "w") as xFile:
+                xFile.write(str(values[x]))
+        return True
+    def getPublic(self):
+        return self.public
+    def getPrivate(self):
+        return self.private
+
+class Change():
+    def __init__(self, public, private):
+        self.public = public
+        self.private = private
+    def encrypt(self, m):
+        encrypted = []
+        for x in range(len(m)):
+            c = ord(m[x])**self.public[0]%self.public[1]
+            encrypted.append(chr(c))
+        return encrypted
+    def decrypt(self, c):
+        decrypted = []
+        for x in range(len(c)):
+            m = ord(c[x])**self.private[0]%self.private[1]
+            decrypted.append(chr(m))
+        return decrypted
+myKey = Key("hey")
+newpath = myKey.name
+if os.path.exists(newpath):
+    myKey.start()
+    x = Change(myKey.getPublic(), myKey.getPrivate())
+    plaintext = "hey world"
+    print("plaintext: " + str(plaintext))
+    encrypt = x.encrypt(plaintext)
+    decrypt = x.decrypt(x.encrypt(plaintext))
+    print("encrypted: ", end="")
+    for x in range(len(encrypt)):
+        print(encrypt[x], end="")
+    print()
+    print("decrypted: ", end="")
+    for x in range(len(decrypt)):
+        print(decrypt[x], end="")
+else:
+    os.makedirs(newpath)
+    if myKey.generate() == True:
+        print("Key generation " + newpath + " successful.")
