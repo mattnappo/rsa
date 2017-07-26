@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import fractions, random, os, io
+import fractions, random, os, io, struct
 class Key():
     def __init__(self, name):
         self.name = name
@@ -50,17 +50,17 @@ class Change():
         self.private = private
         self.contents = ""
     def encrypt(self, file):
-        with open(file, "r+", encoding="utf-8") as xFile:
+        with open(file, "r", encoding="utf-8") as xFile:
             self.contents = xFile.read()
-            open(file, "r+", encoding="utf-8").close()
-        with open(file, "r+", encoding="utf-8") as xFile:
+        open(file, "w", encoding="utf-8").close()
+        with open(file, "w", encoding="utf-8") as xFile:
             for x in range(len(self.contents)):
                 encr = ord(self.contents[x])**self.public[0]%self.public[1]
                 xFile.write(chr(encr))
     def decrypt(self, file):
-        with open(file, "r+", encoding="utf-8") as xFile:
+        with open(file, "r", encoding="utf-8") as xFile:
             self.contents = xFile.read()
-            open(file, "w", encoding="utf-8").close()
+        open(file, "w", encoding="utf-8").close()
         with open(file, "w", encoding="utf-8") as xFile:
             for x in range(len(self.contents)):
                 encr = ord(self.contents[x])**self.private[0]%self.private[1]

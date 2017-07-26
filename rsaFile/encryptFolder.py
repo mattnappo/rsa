@@ -17,21 +17,12 @@ def looper(directory):
                 modifier.decrypt(directory + "/" + file)
                 print(file + " decrypted")
 
-myKey = Key("yo")
+myKey = Key("key0")
 newpath = myKey.name
 if os.path.exists(myKey.name):
     myKey.start()
-    '''files = os.listdir("./encryptme")'''
     modifier = Change(myKey.getPublic(), myKey.getPrivate())
     looper("./encryptme")
-    '''for x in range(len(files)):
-        file = files[x]
-        print(os.path.isdir(file))
-        if os.path.isdir("./encryptme/" + file) == True:
-            print(file + " is a dir")
-        else:
-            modifier.decrypt("./encryptme/" + file)
-            print(file + " encrypted")'''
 else:
     os.makedirs(newpath)
     if myKey.generate() == True:
