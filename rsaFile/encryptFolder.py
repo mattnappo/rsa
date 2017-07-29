@@ -17,7 +17,7 @@ def looper(directory):
                 modifier.decrypt(directory + "/" + file)
                 print(file + " decrypted")
 
-myKey = Key("forsacha")
+myKey = Key("basicKey")
 newpath = myKey.name
 if os.path.exists(myKey.name):
     myKey.start()
