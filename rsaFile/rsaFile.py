@@ -49,14 +49,16 @@ class Change():
         self.public = public
         self.private = private
         self.contents = ""
+        self.intContents =
     def encrypt(self, file):
         with open(file, "r", encoding="utf-8") as xFile:
             self.contents = xFile.read()
         open(file, "w", encoding="utf-8").close()
         with open(file, "w", encoding="utf-8") as xFile:
-            for x in range(len(self.contents)):
-                encr = ord(self.contents[x])**self.public[0]%self.public[1]
-                xFile.write(chr(encr))
+            self.intContents = int.from_bytes(self.contents, byteorder='little')
+            encr = self.intContents**self.public[0]%self.public[1]
+            print(str(encr).encode())
+            xFile.write()
     def decrypt(self, file):
         with open(file, "r", encoding="utf-8") as xFile:
             self.contents = xFile.read()

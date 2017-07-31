@@ -27,4 +27,3 @@ else:
     os.makedirs(newpath)
     if myKey.generate() == True:
         print("Key generation " + newpath + " successful.")
-        
