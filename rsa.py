@@ -55,8 +55,10 @@ class Change():
         open(file, "w", encoding="utf-8").close()
         with open(file, "r", encoding="utf-8") as xFile:
             for x in range(len(self.contents)):
-                encr = ord(self.contents[x])**self.public[0]%self.public[1]
-                xFile.write(chr(encr))
+                encr = self.contents[x]**self.public[0]%self.public[1]
+                print(self.contents[x]**self.public[0]%self.public[1])
+                print(encr**self.private[0]%self.private[1])
+                #xFile.write(chr(encr))
     def decrypt(self, file):
         with open(file, "r", encoding="utf-8") as xFile:
             self.contents = xFile.read()
@@ -65,23 +67,3 @@ class Change():
             for x in range(len(self.contents)):
                 encr = ord(self.contents[x])**self.private[0]%self.private[1]
                 xFile.write(chr(encr))
-myKey = Key("hey")
-newpath = myKey.name
-if os.path.exists(newpath):
-    myKey.start()
-    x = Change(myKey.getPublic(), myKey.getPrivate())
-    plaintext = "hey world"
-    print("plaintext: " + str(plaintext))
-    encrypt = x.encrypt(plaintext)
-    decrypt = x.decrypt(x.encrypt(plaintext))
-    print("encrypted: ", end="")
-    for x in range(len(encrypt)):
-        print(encrypt[x], end="")
-    print()
-    print("decrypted: ", end="")
-    for x in range(len(decrypt)):
-        print(decrypt[x], end="")
-else:
-    os.makedirs(newpath)
-    if myKey.generate() == True:
-        print("Key generation " + newpath + " successful.")

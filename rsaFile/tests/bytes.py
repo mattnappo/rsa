@@ -1,9 +1,3 @@
-contents = "hey"
-def encrypt(file):
-    with open(file, "r") as r:
-        print(contents)
-        contents = r.read()
-
 class Encrypter():
     def __init__(self):
         self.contents = ""
