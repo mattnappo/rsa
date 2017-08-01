@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from readString import Key, Change
+from rsa import Key, Modifier
 import os
 inp = input("E or D? ")
 def looper(directory):
@@ -21,7 +21,7 @@ myKey = Key("basicKey")
 newpath = myKey.name
 if os.path.exists(myKey.name):
     myKey.start()
-    modifier = Change(myKey.getPublic(), myKey.getPrivate())
+    modifier = Modifier(myKey.getPublic(), myKey.getPrivate())
     looper("./encryptme")
 else:
     os.makedirs(newpath)

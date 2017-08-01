@@ -44,43 +44,24 @@ class Key():
         return self.public
     def getPrivate(self):
         return self.private
-class Change():
+class Modifier():
     def __init__(self, public, private):
         self.public = public
         self.private = private
-        self.contents = []
-        self.intBytes = 0
-    def intToBytes(self, i):
-        if i == 0:
-            return b""
-        else:
-            return self.intToBytes(i//256) + bytes([i%256])
+        self.contents = ""
     def encrypt(self, file):
-        with open(file, "rb") as r:
-            self.contents = r.read()
-            self.contents = self.contents
-            print(self.contents)
-            print("0: " + str(self.contents[0]))
-            print("1: " + str(self.contents[1]))
-            print("2: " + str(self.contents[2]))
-            ''' i need to make a different array to store each individual byte, from the file, which I will then iterate over below.'''
-        open(file, "wb").close()
-        with open(file, "wb") as w:
-            self.intBytes = int.from_bytes(self.contents, byteorder="big")
-            encr = self.intBytes**self.public[0]%self.public[1]
-
-            #open file and read contents as bytes
-            #turn each byte into an integer
-            #do the math to each integer
-
-            #convert each integer back into a byte
-            #w.write(encr.to_bytes(4, byteorder="big"))
+        with open(file, "r", encoding="utf-8") as xFile:
+            self.contents = xFile.read()
+        open(file, "w", encoding="utf-8").close()
+        with open(file, "w", encoding="utf-8") as xFile:
+            for x in range(len(self.contents)):
+                encr = ord(self.contents[x])**self.public[0]%self.public[1]
+                xFile.write(chr(encr))
     def decrypt(self, file):
-        with open(file, "rb") as r:
-            self.contents = bytearray(r.read())
-        open(file, "wb").close()
-        with open(file, "wb") as w:
-            for byte in self.contents:
-                self.intByte = int.from_bytes([byte], byteorder="big")
-                encr = self.intByte**self.private[0]%self.private[1]
-                w.write(encr.to_bytes(4, byteorder="big"))
+        with open(file, "r", encoding="utf-8") as xFile:
+            self.contents = xFile.read()
+        open(file, "w", encoding="utf-8").close()
+        with open(file, "w", encoding="utf-8") as xFile:
+            for x in range(len(self.contents)):
+                encr = ord(self.contents[x])**self.private[0]%self.private[1]
+                xFile.write(chr(encr))
