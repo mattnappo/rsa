@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from rsaFile import Key, Change
+from readString import Key, Change
 import os
 inp = input("E or D? ")
 def looper(directory):
