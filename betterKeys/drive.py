@@ -18,12 +18,11 @@ def looper(directory):
                 print(file + " decrypted")
 
 myKey = Key("basicKey")
-newpath = myKey.name
-if os.path.exists(myKey.name):
+new = myKey.name
+if os.path.isfile(new + ".json"):
     myKey.start()
     modifier = Modifier(myKey.getPublic(), myKey.getPrivate())
     looper("./encryptme")
 else:
-    os.makedirs(newpath)
     if myKey.generate() == True:
-        print("Key generation " + newpath + " successful.")
+        print("Key generation " + new + " successful.")
