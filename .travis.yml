@@ -1,4 +1,4 @@
 language: python
   python:
-    - "3.5.4"
-  script: rsa.py
+    - "3.6"
+script: rsa.py
